@@ -1,24 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Router>
+        <Switch>
+          <Route
+            path='/login'
+            render={() => {
+              if (sessionStorage.getItem("token")) {
+                return <Redirect to='/app' />;
+              } else {
+                return <Login />;
+              }
+            }}
+          />
+          {/* <Route path='/create-account' component={CreateAccount} />
+          <Route path='/forgot-password' component={ForgotPassword} />
+          <Route path='/user/reset-password' component={ResetPassword} /> */}
+
+          <Route
+            path='/app'
+            render={() => {
+              if (!sessionStorage.getItem("token")) {
+                return <Redirect to={"/login"} />;
+              }
+            }}
+          />
+
+          <Redirect exact from='/' to='/login' />
+        </Switch>
+      </Router>
+      <Toaster />
+    </>
   );
 }
 
