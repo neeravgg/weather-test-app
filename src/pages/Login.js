@@ -1,99 +1,129 @@
-import React from "react";
-import {
-  MDBBtn,
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBCard,
-  MDBCardBody,
-  MDBInput,
-  MDBIcon,
-} from "mdb-react-ui-kit";
+import React, { useState } from "react";
+import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
+import toast from "react-hot-toast";
+import axios from "axios";
+import SignUp from "../components/SignUp";
+import SignIn from "../components/SignIn";
+import { useHistory } from "react-router-dom";
 
-function App() {
+const Login = () => {
+  const [values, setValues] = useState({});
+  const [isSignUpRequired, setIsSignUpRequired] = useState(false);
+  const [switchSign, setSwitchSign] = useState(false);
+  const history = useHistory();
+
+  console.log(values);
+  const onChange = (event) => {
+    event.preventDefault();
+    if (event.persist) event.persist();
+    setValues((values) => ({
+      ...values,
+      [event?.target?.name]: event?.target?.value,
+    }));
+  };
+
+  const onSignIn = async (event) => {
+    event.preventDefault();
+    if (!values.password || !values.email) {
+      toast.error("Please enter all details correctly!");
+      return;
+    }
+    const response = await axios.post(
+      `${process.env.REACT_APP_API_URL}/api/login`,
+      {
+        ...values,
+      }
+    );
+    if (response?.data?.token) {
+      sessionStorage.setItem("token", response?.data?.token);
+      history.push("/home");
+    } else {
+      setIsSignUpRequired(true);
+      toast.error("You don't have an Account!");
+    }
+  };
+
+  const onSignUp = async (event) => {
+    event.preventDefault();
+    if (
+      !values.name ||
+      !values.email ||
+      !values.password ||
+      !values.confirm_password
+    ) {
+      toast.error("Please enter all details correctly!");
+      return;
+    }
+    if (values.password !== values.confirm_password) {
+      toast.error("Confirm Password should be same");
+      return;
+    }
+    const response = await axios.post(
+      `${process.env.REACT_APP_API_URL}/api/register`,
+      {
+        ...values,
+      }
+    );
+    if (response?.data?.token) {
+      sessionStorage.setItem("token", response?.data?.token);
+      history.push("/home");
+    } else {
+      setIsSignUpRequired(false);
+      toast.error("You Already have an Account!");
+    }
+  };
+
   return (
-    <MDBContainer fluid>
-      <MDBRow className='d-flex justify-content-center align-items-center h-100'>
-        <MDBCol col='12'>
-          <MDBCard
-            className='bg-dark text-white my-5 mx-auto'
-            style={{ borderRadius: "1rem", maxWidth: "400px" }}
-          >
-            <MDBCardBody className='p-5 d-flex flex-column align-items-center mx-auto w-100'>
-              <h2 className='fw-bold mb-2 text-uppercase'>Login</h2>
-              <p className='text-white-50 mb-5'>
-                Please enter your login and password!
-              </p>
+    <div className='App'>
+      <Container>
+        <Row className='vh-100 d-flex justify-content-center align-items-center'>
+          <Col md={8} lg={6} xs={12}>
+            <div className='border border-3 border-primary'></div>
+            <Card className='shadow'>
+              <Card.Body>
+                <div className='mb-3 mt-md-4'>
+                  <h2 className='fw-bold mb-2 text-uppercase '>WEATHER</h2>
+                  <div className='mb-3'>
+                    {switchSign ? (
+                      <SignUp
+                        onSubmit={onSignUp}
+                        values={values}
+                        onChange={onChange}
+                        isSignUpRequired={isSignUpRequired}
+                      />
+                    ) : (
+                      <SignIn
+                        onSubmit={onSignIn}
+                        values={values}
+                        onChange={onChange}
+                        isSignUpRequired={isSignUpRequired}
+                      />
+                    )}
 
-              <MDBInput
-                wrapperClass='mb-4 mx-5 w-100'
-                labelClass='text-white'
-                label='Email address'
-                id='formControlLg'
-                type='email'
-                size='lg'
-              />
-              <MDBInput
-                wrapperClass='mb-4 mx-5 w-100'
-                labelClass='text-white'
-                label='Password'
-                id='formControlLg'
-                type='password'
-                size='lg'
-              />
-
-              <p className='small mb-3 pb-lg-2'>
-                <a class='text-white-50' href='#!'>
-                  Forgot password?
-                </a>
-              </p>
-              <MDBBtn outline className='mx-2 px-5' color='white' size='lg'>
-                Login
-              </MDBBtn>
-
-              <div className='d-flex flex-row mt-3 mb-5'>
-                <MDBBtn
-                  tag='a'
-                  color='none'
-                  className='m-3'
-                  style={{ color: "white" }}
-                >
-                  <MDBIcon fab icon='facebook-f' size='lg' />
-                </MDBBtn>
-
-                <MDBBtn
-                  tag='a'
-                  color='none'
-                  className='m-3'
-                  style={{ color: "white" }}
-                >
-                  <MDBIcon fab icon='twitter' size='lg' />
-                </MDBBtn>
-
-                <MDBBtn
-                  tag='a'
-                  color='none'
-                  className='m-3'
-                  style={{ color: "white" }}
-                >
-                  <MDBIcon fab icon='google' size='lg' />
-                </MDBBtn>
-              </div>
-
-              <div>
-                <p className='mb-0'>
-                  Don't have an account?{" "}
-                  <a href='#!' class='text-white-50 fw-bold'>
-                    Sign Up
-                  </a>
-                </p>
-              </div>
-            </MDBCardBody>
-          </MDBCard>
-        </MDBCol>
-      </MDBRow>
-    </MDBContainer>
+                    <div className='mt-3'>
+                      <span className='mb-0  text-center'>
+                        {!switchSign
+                          ? `Already have an account?${" "}`
+                          : `Don't have an account?${" "}`}
+                        <span
+                          className='text-primary fw-bold cursor-pointer'
+                          onClick={() => {
+                            setSwitchSign(!switchSign);
+                          }}
+                        >
+                          {!switchSign ? `Login` : `Sign Up`}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+    </div>
   );
-}
+};
 
-export default App;
+export default Login;
