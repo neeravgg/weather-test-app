@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
+import { Col, Row, Container, Card } from "react-bootstrap";
 import toast from "react-hot-toast";
 import axios from "axios";
 import SignUp from "../components/SignUp";
@@ -28,18 +28,22 @@ const Login = () => {
       toast.error("Please enter all details correctly!");
       return;
     }
-    const response = await axios.post(
-      `${process.env.REACT_APP_API_URL}/api/login`,
-      {
-        ...values,
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/login`,
+        {
+          ...values,
+        }
+      );
+      if (response?.data?.token) {
+        sessionStorage.setItem("token", response?.data?.token);
+        history.push("/home");
+      } else {
+        setIsSignUpRequired(true);
+        toast.error("You don't have an Account!");
       }
-    );
-    if (response?.data?.token) {
-      sessionStorage.setItem("token", response?.data?.token);
-      history.push("/home");
-    } else {
-      setIsSignUpRequired(true);
-      toast.error("You don't have an Account!");
+    } catch (err) {
+      console.log(err?.message);
     }
   };
 

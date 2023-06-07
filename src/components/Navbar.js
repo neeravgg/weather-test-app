@@ -13,7 +13,12 @@ const Navigationbar = () => {
       />
       <Navbar.Collapse id='navbarScroll'>
         <Nav className='d-flex flex-lg-row justify-content-lg-between w-100 px-3'>
-          <NavLink eventKey='1' as={Link} to='/home'>
+          <NavLink
+            eventKey='1'
+            as={Link}
+            to='/home'
+            onClick={() => window.location.reload(false)}
+          >
             Home
           </NavLink>
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
+import { Button,  Form } from "react-bootstrap";
 
 function SignUp({ onSubmit, values, onChange, isSignUpRequired }) {
   return (
