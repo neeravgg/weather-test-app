@@ -27,7 +27,8 @@ function AddCities() {
       toast.error("City Already exists!!");
       return;
     }
-    const response = getWeather(value);
+    const response = await getWeather(value);
+
     if (response) {
       const data = {
         name: value,

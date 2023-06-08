@@ -8,6 +8,7 @@ import {
 
 function ModalPage({ onHide, show, weather }) {
   const formatBackground = () => {
+    // the weather popup changes color depending upon temprature
     if (!weather) return "bg-info bg-gradient";
     const threshold = 20;
     if (weather.temp <= threshold) return "bg-info bg-gradient";
