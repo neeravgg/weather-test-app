@@ -3,6 +3,7 @@ import { Button, Form } from "react-bootstrap";
 import toast from "react-hot-toast";
 import GetFormattedWeatherData from "../services/WeatherServices";
 import axios from "axios";
+import Cards from "./Cards";
 
 function AddCities() {
   const [cities, setCities] = useState([]);
@@ -21,15 +22,15 @@ function AddCities() {
     if (!value) {
       toast.error("Please enter a City");
       return;
-    } else if (cities.includes(value)) {
+    }
+    if (!!cities.find((city) => city.name === value)) {
       toast.error("City Already exists!!");
       return;
     }
-    let searchParams = {
-      q: value,
-      units: "metric",
-    };
-    const response = await GetFormattedWeatherData(searchParams);
+    const response = getWeather(value);
+    if (response) {
+      return;
+    }
     const data = {
       name: value,
       weather: JSON.stringify(response?.temp),
@@ -45,7 +46,7 @@ function AddCities() {
         data,
         bearer
       );
-      if (response) toast.success(response?.message);
+      if (response) toast.success("City Added Successfully!");
     } catch (err) {
       console.log(err?.message);
     }
@@ -64,8 +65,26 @@ function AddCities() {
       console.log(err?.message);
     }
   };
-  console.log("cities", cities);
+  const deleteCity = async (id) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/city/delete/${id}`,
+        bearer
+      );
+      toast.success("City deleted Successfully!");
+    } catch (err) {
+      console.log(err?.message);
+    }
+  };
 
+  const getWeather = async (city) => {
+    let searchParams = {
+      q: city,
+      units: "metric",
+    };
+    const response = await GetFormattedWeatherData(searchParams);
+    return response;
+  };
   return (
     <>
       <Form onSubmit={onSubmit} className='pt-2 w-50 m-auto '>
@@ -88,7 +107,17 @@ function AddCities() {
         </Form.Group>
       </Form>
 
-      <div className='d-flex flex-wrap '></div>
+      <div className='d-flex flex-wrap gap-3 mt-5 px- justify-content-center'>
+        {cities.map((item) => {
+          return (
+            <Cards
+              item={item}
+              getWeather={getWeather}
+              deleteCity={deleteCity}
+            />
+          );
+        })}
+      </div>
     </>
   );
 }

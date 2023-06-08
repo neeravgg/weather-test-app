@@ -1,15 +1,16 @@
 import { DateTime } from "luxon";
+import toast from "react-hot-toast";
+const API_KEY = "a7a79867dc7b27f4d6fa4ee48f53da02";
+const BASE_URL = "https://api.openweathermap.org/data/2.5";
 
 const getWeatherData = async (infoType, searchParams) => {
-  const url = new URL(
-    "https://api.openweathermap.org/data/2.5" + "/" + infoType
-  );
+  const url = new URL(BASE_URL + "/" + infoType);
   url.search = new URLSearchParams({
     ...searchParams,
-    appid: "a7a79867dc7b27f4d6fa4ee48f53da02",
+    appid: API_KEY,
   });
-
-  return fetch(url).then((res) => res.json());
+  const response = fetch(url).then((res) => res.json());
+  return response;
 };
 
 const formatCurrentWeather = (data) => {
@@ -66,20 +67,21 @@ const formatForecastWeather = (data) => {
 };
 
 const GetFormattedWeatherData = async (searchParams) => {
-  const formattedCurrentWeather = await getWeatherData(
-    "weather",
-    searchParams
-  ).then(formatCurrentWeather);
+  let formattedCurrentWeather = await getWeatherData("weather", searchParams);
 
-  const { lat, lon } = formattedCurrentWeather;
-
+  if (formattedCurrentWeather.cod === "404" || !searchParams) {
+    toast.error("City not found, please choose another city");
+    return;
+  }
+  let data = formatCurrentWeather(formattedCurrentWeather);
+  const { lat, lon } = data;
   const formattedForecastWeather = await getWeatherData("onecall", {
     lat,
     lon,
     exclude: "current,minutely,alerts",
     units: searchParams.units,
   }).then(formatForecastWeather);
-  return { ...formattedCurrentWeather, ...formattedForecastWeather };
+  return { ...data, ...formattedForecastWeather };
 };
 
 const formatToLocalTime = (

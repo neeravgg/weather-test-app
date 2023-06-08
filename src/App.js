@@ -1,8 +1,6 @@
 import React from "react";
 import "./App.css";
 import {
-  BrowserRouter as Router,
-  BrowserRouter,
   Route,
   Redirect,
 } from "react-router-dom";
@@ -14,9 +12,6 @@ function App() {
   console.log(!sessionStorage.getItem("token"));
   return (
     <>
-      <Router>
-        <BrowserRouter>
-          <div>
             <Route
               exact
               path='/login'
@@ -42,9 +37,6 @@ function App() {
             />
 
             <Redirect from='/' to={sessionStorage.getItem("token") ? '/home' : '/login'} />
-          </div>
-        </BrowserRouter>
-      </Router>
       <Toaster />
     </>
   );
