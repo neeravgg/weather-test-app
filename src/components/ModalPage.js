@@ -7,14 +7,7 @@ import {
 } from "./forcastDetails";
 
 function ModalPage({ onHide, show, weather }) {
-  const formatBackground = () => {
-    // the weather popup changes color depending upon temprature
-    if (!weather) return "bg-info bg-gradient";
-    const threshold = 20;
-    if (weather.temp <= threshold) return "bg-info bg-gradient";
-
-    return "bg-warning bg-gradient";
-  };
+ 
 
   return (
     <>
@@ -32,7 +25,14 @@ function ModalPage({ onHide, show, weather }) {
         </Modal.Header>
         <Modal.Body>
           <div
-            className={`mx-auto py-1 rounded shadow-lg ${formatBackground()}`}
+            className={`mx-auto py-1 rounded shadow-lg `}
+            style={{
+              background: `${
+                !weather || weather.temp <= 25
+                  ? "linear-gradient(to bottom,  #67e8f9 , #7dd3fc )"
+                  : "linear-gradient(to bottom,  #fde047 , #fdba74)"
+              }`,
+            }}
           >
             {weather && (
               <div>
