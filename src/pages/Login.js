@@ -12,7 +12,6 @@ const Login = () => {
   const [switchSign, setSwitchSign] = useState(false);
   const history = useHistory();
 
-  console.log(values);
   const onChange = (event) => {
     event.preventDefault();
     if (event.persist) event.persist();
@@ -43,6 +42,8 @@ const Login = () => {
         toast.error("You don't have an Account!");
       }
     } catch (err) {
+      setIsSignUpRequired(true);
+      toast.error("You don't have an Account!");
       console.log(err?.message);
     }
   };
@@ -62,18 +63,28 @@ const Login = () => {
       toast.error("Confirm Password should be same");
       return;
     }
-    const response = await axios.post(
-      `${process.env.REACT_APP_API_URL}/api/register`,
-      {
-        ...values,
+    if (values.password.length < 8 || values.confirm_password < 8) {
+      toast.error("Password Length should be minimum 8 characters");
+      return;
+    }
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/register`,
+        {
+          ...values,
+        }
+      );
+      if (response?.data?.token) {
+        sessionStorage.setItem("token", response?.data?.token);
+        history.push("/home");
+      } else {
+        setIsSignUpRequired(false);
+        toast.error("You Already have an Account!");
       }
-    );
-    if (response?.data?.token) {
-      sessionStorage.setItem("token", response?.data?.token);
-      history.push("/home");
-    } else {
-      setIsSignUpRequired(false);
-      toast.error("You Already have an Account!");
+    } catch (err) {
+      // setIsSignUpRequired(false);
+      toast.error(err?.message);
+      console.log(err?.message);
     }
   };
 
@@ -106,16 +117,18 @@ const Login = () => {
 
                     <div className='mt-3'>
                       <span className='mb-0  text-center'>
-                        {!switchSign
+                        {switchSign
                           ? `Already have an account?${" "}`
                           : `Don't have an account?${" "}`}
                         <span
-                          className='text-primary fw-bold cursor-pointer'
+                          className='text-primary fw-bold'
+                          role="button"
                           onClick={() => {
                             setSwitchSign(!switchSign);
+                            // setIsSignUpRequired(!isSignUpRequired);
                           }}
                         >
-                          {!switchSign ? `Login` : `Sign Up`}
+                          {switchSign ? `Login` : `Sign Up`}
                         </span>
                       </span>
                     </div>

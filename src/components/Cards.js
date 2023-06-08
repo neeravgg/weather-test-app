@@ -6,15 +6,15 @@ import ModalPage from "./ModalPage";
 function Cards({ item, getWeather, deleteCity }) {
   const [weather, setWeather] = useState();
   const [modalShow, setModalShow] = useState(false);
-  const variant = "info";
+  const variant = "dark";
   //   useEffect(() => {
   //     getWeather();
   //   }, [isModal]);
 
   //   console.log(getWeather(item.name));
-  const weatherData = (city) => {
+  const weatherData = async (city) => {
     if (city) {
-      const res = getWeather(city);
+      const res = await getWeather(city);
       setWeather(res);
     }
   };

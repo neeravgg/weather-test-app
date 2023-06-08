@@ -69,7 +69,7 @@ const formatForecastWeather = (data) => {
 const GetFormattedWeatherData = async (searchParams) => {
   let formattedCurrentWeather = await getWeatherData("weather", searchParams);
 
-  if (formattedCurrentWeather.cod === "404" || !searchParams) {
+  if (formattedCurrentWeather.cod === "404") {
     toast.error("City not found, please choose another city");
     return;
   }

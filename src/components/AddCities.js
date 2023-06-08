@@ -29,14 +29,13 @@ function AddCities() {
     }
     const response = getWeather(value);
     if (response) {
-      return;
+      const data = {
+        name: value,
+        weather: JSON.stringify(response?.temp),
+      };
+      await addCityDb(data);
+      // setCities((oldArray) => [...oldArray, data]);
     }
-    const data = {
-      name: value,
-      weather: JSON.stringify(response?.temp),
-    };
-    setCities((oldArray) => [...oldArray, data]);
-    await addCityDb(data);
   };
 
   const addCityDb = async (data) => {
@@ -46,7 +45,10 @@ function AddCities() {
         data,
         bearer
       );
-      if (response) toast.success("City Added Successfully!");
+      if (response) {
+        getCityListDb();
+        toast.success("City Added Successfully!");
+      }
     } catch (err) {
       console.log(err?.message);
     }
@@ -65,13 +67,16 @@ function AddCities() {
       console.log(err?.message);
     }
   };
+
   const deleteCity = async (id) => {
+    console.log("id", id, cities);
     try {
-      const response = await axios.get(
+      await axios.get(
         `${process.env.REACT_APP_API_URL}/api/city/delete/${id}`,
         bearer
       );
       toast.success("City deleted Successfully!");
+      getCityListDb();
     } catch (err) {
       console.log(err?.message);
     }

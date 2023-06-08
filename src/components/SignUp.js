@@ -1,5 +1,5 @@
 import React from "react";
-import { Button,  Form } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 
 function SignUp({ onSubmit, values, onChange, isSignUpRequired }) {
   return (
@@ -49,7 +49,7 @@ function SignUp({ onSubmit, values, onChange, isSignUpRequired }) {
         </Form.Group>
 
         <Form.Group className='d-grid'>
-          <span className={` mt-3 mb-3 ${isSignUpRequired && "text-danger"} `}>
+          <span className={` mt-3 mb-3 ${!isSignUpRequired && "text-danger"} `}>
             {isSignUpRequired
               ? "Note: Please Create an Account"
               : "Note: Account Already Exist, Signin instead"}

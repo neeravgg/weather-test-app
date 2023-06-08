@@ -14,14 +14,12 @@ import {
 function TimeAndLocation({ weather: { dt, timezone, name, country } }) {
   return (
     <div>
-      <div className='flex items-center justify-center my-6'>
-        <p className='text-white text-xl font-extralight'>
-          {formatToLocalTime(dt, timezone)}
-        </p>
+      <div className='d-flex justify-content-center my-3'>
+        <p className='text-dark '>{formatToLocalTime(dt, timezone)}</p>
       </div>
 
-      <div className='flex items-center justify-center my-3'>
-        <p className='text-white text-3xl font-medium'>{`${name}, ${country}`}</p>
+      <div className='d-flex justify-content-center my-2'>
+        <p className='text-dark fs-2 fw-bold'>{`${name}, ${country}`}</p>
       </div>
     </div>
   );
@@ -44,25 +42,25 @@ function TemperatureAndDetails({
 }) {
   return (
     <div>
-      <div className='flex items-center justify-center py-6 text-xl text-cyan-300'>
+      <div className='d-flex justify-content-center py-1 fs-2 fw-bold text-danger'>
         <p>{details}</p>
       </div>
 
-      <div className='flex flex-row items-center justify-between text-white py-3'>
-        <img src={iconUrlFromCode(icon)} alt='' className='w-20' />
-        <p className='text-5xl'>{`${temp.toFixed()}°`}</p>
-        <div className='flex flex-col space-y-2'>
+      <div className='d-flex flex-row justify-content-center text-dark py-4'>
+        <img src={iconUrlFromCode(icon)} alt='' style={{ width: "6rem" }} />
+        <p className='fs-4'>{`${temp.toFixed()}°`}</p>
+        <div className='flex flex-col space-y-2 px-3 pt-1'>
           <div className='flex font-light text-sm items-center justify-center'>
             <UilTemperature size={18} className='mr-1' />
-            Real fell:
-            <span className='font-medium ml-1'>{`${feels_like.toFixed()}°`}</span>
+            Feel like:
+            <span className='fw-normal ml-1'>{`${feels_like.toFixed()}°`}</span>
           </div>
-          <div className='flex font-light text-sm items-center justify-center'>
+          <div className='flex font-light text-sm justify-content-center'>
             <UilTear size={18} className='mr-1' />
             Humidity:
             <span className='font-medium ml-1'>{`${humidity.toFixed()}%`}</span>
           </div>
-          <div className='flex font-light text-sm items-center justify-center'>
+          <div className='flex font-light text-sm justify-content-center'>
             <UilWind size={18} className='mr-1' />
             Wind:
             <span className='font-medium ml-1'>{`${speed.toFixed()} km/h`}</span>
@@ -70,7 +68,7 @@ function TemperatureAndDetails({
         </div>
       </div>
 
-      <div className='flex flex-row items-center justify-center space-x-2 text-white text-sm py-3'>
+      <div className='d-flex flex-row justify-content-center gap-3 text-dark text-sm py-3'>
         <UilSun />
         <p className='font-light'>
           Rise:{" "}
@@ -87,8 +85,9 @@ function TemperatureAndDetails({
             {formatToLocalTime(sunset, timezone, "hh:mm a")}
           </span>
         </p>
-        <p className='font-light'>|</p>
-
+      
+      </div>
+      <div className='d-flex flex-row justify-content-center gap-3 text-dark text-sm py-3'>
         <UilSun />
         <p className='font-light'>
           High:{" "}
@@ -110,12 +109,12 @@ function Forecast({ title, items }) {
   // console.log(items);
   return (
     <div>
-      <div className='flex items-center justify-start mt-6'>
-        <p className='text-white font-medium uppercase'>{title}</p>
+      <div className='d-flex justify-content-center mt-3'>
+        <p className='text-dark fw-bold text-capitalize'>{title}</p>
       </div>
       <hr className='my-2' />
 
-      <div className='flex flex-row items-center justify-between text-white'>
+      <div className='d-flex flex-row justify-content-center text-dark'>
         {items.map((item, index) => (
           <div
             key={index}
