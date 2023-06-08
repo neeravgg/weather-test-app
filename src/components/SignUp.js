@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Form } from "react-bootstrap";
 
-function SignUp({ onSubmit, values, onChange, isSignUpRequired }) {
+function SignUp({ onSubmit, values, onChange, isSignInRequired, switchSign }) {
   return (
     <>
       <Form onSubmit={onSubmit}>
@@ -49,8 +49,8 @@ function SignUp({ onSubmit, values, onChange, isSignUpRequired }) {
         </Form.Group>
 
         <Form.Group className='d-grid'>
-          <span className={` mt-3 mb-3 ${!isSignUpRequired && "text-danger"} `}>
-            {isSignUpRequired
+          <span className={` mt-3 mb-3 ${isSignInRequired && "text-danger"} `}>
+            {!isSignInRequired
               ? "Note: Please Create an Account"
               : "Note: Account Already Exist, Signin instead"}
           </span>

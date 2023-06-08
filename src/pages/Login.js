@@ -9,6 +9,7 @@ import { useHistory } from "react-router-dom";
 const Login = () => {
   const [values, setValues] = useState({});
   const [isSignUpRequired, setIsSignUpRequired] = useState(false);
+  const [isSignInRequired, setIsSignInRequired] = useState(false);
   const [switchSign, setSwitchSign] = useState(false);
   const history = useHistory();
 
@@ -78,7 +79,7 @@ const Login = () => {
         sessionStorage.setItem("token", response?.data?.token);
         history.push("/home");
       } else {
-        setIsSignUpRequired(false);
+        setIsSignInRequired(true);
         toast.error("You Already have an Account!");
       }
     } catch (err) {
@@ -104,7 +105,8 @@ const Login = () => {
                         onSubmit={onSignUp}
                         values={values}
                         onChange={onChange}
-                        isSignUpRequired={isSignUpRequired}
+                        isSignInRequired={isSignInRequired}
+                        switchSign={switchSign}
                       />
                     ) : (
                       <SignIn
@@ -112,6 +114,7 @@ const Login = () => {
                         values={values}
                         onChange={onChange}
                         isSignUpRequired={isSignUpRequired}
+                        switchSign={switchSign}
                       />
                     )}
 
@@ -122,10 +125,9 @@ const Login = () => {
                           : `Don't have an account?${" "}`}
                         <span
                           className='text-primary fw-bold'
-                          role="button"
+                          role='button'
                           onClick={() => {
                             setSwitchSign(!switchSign);
-                            // setIsSignUpRequired(!isSignUpRequired);
                           }}
                         >
                           {switchSign ? `Login` : `Sign Up`}
