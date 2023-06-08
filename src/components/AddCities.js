@@ -23,7 +23,7 @@ function AddCities() {
       toast.error("Please enter a City");
       return;
     }
-    if (!!cities.find((city) => city.name === value)) {
+    if (!!cities.find((city) => city.name.toLowerCase() === value.toLowerCase())) {
       toast.error("City Already exists!!");
       return;
     }
